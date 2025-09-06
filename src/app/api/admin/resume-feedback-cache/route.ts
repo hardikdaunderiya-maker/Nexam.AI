@@ -35,6 +35,7 @@ export async function GET(req: Request) {
     );
   } catch (error) {
     console.error("Error in cache GET:", error);
+
     return NextResponse.json(
       { error: "Failed to check cache" },
       { status: 500 }
@@ -64,6 +65,7 @@ export async function DELETE(req: Request) {
     });
   } catch (error) {
     console.error("Error in cache DELETE:", error);
+    
     return NextResponse.json(
       { error: "Failed to clear cache" },
       { status: 500 }

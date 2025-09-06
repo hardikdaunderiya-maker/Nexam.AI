@@ -58,9 +58,11 @@ export const getResumeMappingFromFile = async (interviewId: string): Promise<str
     console.log(`[resumeMapping] All available mappings:`, mappings);
     const result = mappings[interviewId] || null;
     console.log(`[resumeMapping] Found mapping result:`, result);
+    
     return result;
   } catch (error) {
     console.log(`[resumeMapping] Error reading mappings:`, error);
+    
     return null;
   }
 };

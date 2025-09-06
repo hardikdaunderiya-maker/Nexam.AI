@@ -28,7 +28,9 @@ const getAllPositions = async (organizationId: string, userId?: string): Promise
       .eq("is_active", true)
       .order("created_at", { ascending: false });
 
-    if (interviewError) throw interviewError;
+    if (interviewError) {
+      throw interviewError;
+    }
 
     console.log("Fetched interviews for HRM:", interviews?.length || 0, "interviews");
 
@@ -93,6 +95,7 @@ const getAllPositions = async (organizationId: string, userId?: string): Promise
     return positions;
   } catch (error) {
     console.error("Error fetching positions:", error);
+
     return [];
   }
 };
@@ -106,7 +109,9 @@ const getPositionById = async (positionId: string): Promise<Position | null> => 
       .eq("id", positionId)
       .single();
 
-    if (interviewError) throw interviewError;
+    if (interviewError) {
+      throw interviewError;
+    }
 
     const position: Position = {
       id: interview.id,
@@ -162,6 +167,7 @@ const getPositionById = async (positionId: string): Promise<Position | null> => 
     return position;
   } catch (error) {
     console.error("Error fetching position:", error);
+
     return null;
   }
 };
@@ -185,7 +191,9 @@ const getCandidatesByPosition = async (positionId: string): Promise<PositionCand
       .eq("is_ended", true)
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     return responses?.map((response: any) => {
       const analytics = response.analytics || {};
@@ -210,6 +218,7 @@ const getCandidatesByPosition = async (positionId: string): Promise<PositionCand
     }) || [];
   } catch (error) {
     console.error("Error fetching candidates:", error);
+
     return [];
   }
 };
@@ -220,10 +229,10 @@ const getPositionStats = async (positionId: string): Promise<PositionStats | nul
     
     const stats: PositionStats = {
       totalCandidates: candidates.length,
-      hiredCount: candidates.filter(c => c.status === "hired").length,
-      interviewedCount: candidates.filter(c => c.status === "interviewed").length,
-      pendingCount: candidates.filter(c => c.status === "pending").length,
-      rejectedCount: candidates.filter(c => c.status === "rejected").length,
+      hiredCount: candidates.filter(c => c.status === "selected").length,
+      interviewedCount: candidates.filter(c => c.status === "potential").length,
+      pendingCount: candidates.filter(c => c.status === "no_status").length,
+      rejectedCount: candidates.filter(c => c.status === "not_selected").length,
       averageScore: candidates.length > 0 ? Math.round(candidates.reduce((sum, c) => sum + c.score, 0) / candidates.length) : 0,
       topPerformers: candidates
         .sort((a, b) => b.score - a.score)
@@ -233,6 +242,7 @@ const getPositionStats = async (positionId: string): Promise<PositionStats | nul
     return stats;
   } catch (error) {
     console.error("Error fetching position stats:", error);
+
     return null;
   }
 };

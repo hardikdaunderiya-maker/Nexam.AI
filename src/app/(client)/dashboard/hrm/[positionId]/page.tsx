@@ -27,7 +27,9 @@ function PositionDetailPage() {
 
   useEffect(() => {
     const fetchPositionData = async () => {
-      if (!positionId) return;
+      if (!positionId) {
+        return;
+      }
       
       setLoading(true);
       try {
@@ -140,9 +142,16 @@ function PositionDetailPage() {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 90) return "text-green-600";
-    if (score >= 80) return "text-blue-600";
-    if (score >= 70) return "text-yellow-600";
+    if (score >= 90) {
+      return "text-green-600";
+    }
+    if (score >= 80) {
+      return "text-blue-600";
+    }
+    if (score >= 70) {
+      return "text-yellow-600";
+    }
+
     return "text-red-600";
   };
 
@@ -163,7 +172,7 @@ function PositionDetailPage() {
     return (
       <main className="p-8 pt-0 ml-12 mr-auto rounded-md">
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600" />
         </div>
       </main>
     );
@@ -174,7 +183,7 @@ function PositionDetailPage() {
       <main className="p-8 pt-0 ml-12 mr-auto rounded-md">
         <div className="text-center py-12">
           <h3 className="text-lg font-medium text-gray-900 mb-2">Position not found</h3>
-          <p className="text-gray-600">The position you're looking for doesn't exist.</p>
+          <p className="text-gray-600">The position you&apos;re looking for doesn&apos;t exist.</p>
         </div>
       </main>
     );
@@ -186,10 +195,10 @@ function PositionDetailPage() {
       <main className="p-8 pt-0 ml-12 mr-auto rounded-md">
         <div className="flex items-center gap-4 mb-6">
           <Button 
-            onClick={handleCloseCallDetails} 
             variant="ghost" 
             size="sm"
             className="p-2 hover:bg-gray-100 rounded-lg"
+            onClick={handleCloseCallDetails}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -216,10 +225,10 @@ function PositionDetailPage() {
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
             <Button 
-              onClick={handleBackClick} 
               variant="ghost" 
               size="sm"
               className="p-2 hover:bg-gray-100 rounded-lg"
+              onClick={handleBackClick}
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
@@ -238,7 +247,7 @@ function PositionDetailPage() {
             <span>Position ID: {position.id.slice(0, 8)}...</span>
             <span>•</span>
             <span className="flex items-center gap-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <div className="w-2 h-2 bg-green-500 rounded-full" />
               Active Position
             </span>
           </div>

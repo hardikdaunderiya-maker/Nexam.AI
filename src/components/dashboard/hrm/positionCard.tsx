@@ -11,10 +11,17 @@ interface PositionCardProps {
 
 function PositionCard({ position, onClick }: PositionCardProps) {
   const getStatusColor = (count: number, total: number) => {
-    if (total === 0) return "text-gray-500";
+    if (total === 0) {
+      return "text-gray-500";
+    }
     const percentage = (count / total) * 100;
-    if (percentage >= 50) return "text-green-600";
-    if (percentage >= 25) return "text-blue-600";
+    if (percentage >= 50) {
+      return "text-green-600";
+    }
+    if (percentage >= 25) {
+      return "text-blue-600";
+    }
+
     return "text-yellow-600";
   };
 

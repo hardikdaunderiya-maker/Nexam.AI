@@ -98,6 +98,7 @@ export async function POST(req: Request) {
     
     if (cachedFeedback) {
       logger.info(`✅ Found cached feedback for call: ${callId}`);
+      
       return NextResponse.json({
         feedback: cachedFeedback,
         cached: true,

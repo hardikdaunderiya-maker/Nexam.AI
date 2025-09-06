@@ -168,8 +168,13 @@ function FeedbackSection({ callId }: Props) {
   const overallAssessment = feedbackData.overall_assessment || {};
 
   const getRatingBadgeStyle = (rating: number) => {
-    if (rating >= 4) return "bg-green-100 text-green-700 border border-green-200";
-    if (rating >= 3) return "bg-yellow-100 text-yellow-700 border border-yellow-200";
+    if (rating >= 4) {
+      return "bg-green-100 text-green-700 border border-green-200";
+    }
+    if (rating >= 3) {
+      return "bg-yellow-100 text-yellow-700 border border-yellow-200";
+    }
+
     return "bg-red-100 text-red-700 border border-red-200";
   };
 

@@ -29,9 +29,16 @@ function CandidateCard({ candidate, onClick }: CandidateCardProps) {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 90) return "text-green-600";
-    if (score >= 80) return "text-blue-600";
-    if (score >= 70) return "text-yellow-600";
+    if (score >= 90) {
+      return "text-green-600";
+    }
+    if (score >= 80) {
+      return "text-blue-600";
+    }
+    if (score >= 70) {
+      return "text-yellow-600";
+    }
+
     return "text-red-600";
   };
 
@@ -125,8 +132,8 @@ function CandidateCard({ candidate, onClick }: CandidateCardProps) {
             <div>
               <span className="text-sm text-gray-600 block mb-2">Skills:</span>
               <div className="flex flex-wrap gap-1">
-                {candidate.skills.slice(0, 3).map((skill, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
+                {candidate.skills.slice(0, 3).map((skill) => (
+                  <Badge key={skill} variant="outline" className="text-xs">
                     {skill}
                   </Badge>
                 ))}

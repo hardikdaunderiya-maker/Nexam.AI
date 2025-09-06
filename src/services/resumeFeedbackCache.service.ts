@@ -59,6 +59,7 @@ export class ResumeFeedbackCacheService {
       return data.feedback_data as ResumeFeedbackData;
     } catch (error) {
       console.error("Error getting cached feedback:", error);
+      
       return null;
     }
   }
@@ -92,9 +93,11 @@ export class ResumeFeedbackCacheService {
       }
 
       console.log(`✅ Resume feedback cached successfully:`, data);
+      
       return true;
     } catch (error) {
       console.error("❌ Error caching feedback:", error);
+      
       return false;
     }
   }
@@ -121,6 +124,7 @@ export class ResumeFeedbackCacheService {
       return !!data;
     } catch (error) {
       console.error("Error checking cached feedback:", error);
+      
       return false;
     }
   }
@@ -136,13 +140,16 @@ export class ResumeFeedbackCacheService {
         .eq("call_id", callId);
 
       if (error) {
+        
         throw error;
       }
 
       console.log(`🗑️ Cached feedback deleted for call: ${callId}`);
+      
       return true;
     } catch (error) {
       console.error("Error deleting cached feedback:", error);
+      
       return false;
     }
   }
@@ -164,6 +171,7 @@ export class ResumeFeedbackCacheService {
       return data.map(item => item.feedback_data as ResumeFeedbackData);
     } catch (error) {
       console.error("Error getting cached feedback by interview:", error);
+      
       return [];
     }
   }

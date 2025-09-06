@@ -33,6 +33,7 @@ export const generateInterviewAnalytics = async (payload: {
     // Check API key
     if (!process.env.GROQ_API_KEY) {
       console.error("GROQ_API_KEY is not configured");
+      
       return { error: "Groq API key not configured", status: 500 };
     }
 
@@ -69,6 +70,7 @@ export const generateInterviewAnalytics = async (payload: {
     if (!groqResponse.ok) {
       const errorText = await groqResponse.text();
       console.error("Groq API error:", errorText);
+      
       return { error: "Failed to generate analytics", status: 500 };
     }
 

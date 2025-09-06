@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useOrganization, useClerk } from "@clerk/nextjs";
 import { Position } from "@/types/position";
 import { PositionService } from "@/services/positions.service";
@@ -19,11 +19,12 @@ export function PositionsProvider({ children }: { children: React.ReactNode }) {
   const [positions, setPositions] = useState<Position[]>([]);
   const [positionsLoading, setPositionsLoading] = useState<boolean>(true);
 
-  const fetchPositions = async () => {
+  const fetchPositions = useCallback(async () => {
     if (!organization?.id && !user?.id) {
       console.log("No organization ID or user ID, setting positions to empty");
       setPositions([]);
       setPositionsLoading(false);
+
       return;
     }
 
@@ -39,7 +40,7 @@ export function PositionsProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setPositionsLoading(false);
     }
-  };
+  }, [organization?.id, user?.id]);
 
   const refreshPositions = async () => {
     await fetchPositions();
@@ -47,7 +48,7 @@ export function PositionsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     fetchPositions();
-  }, [organization?.id, user?.id]);
+  }, [fetchPositions]);
 
   return (
     <PositionsContext.Provider
@@ -67,5 +68,6 @@ export function usePositions() {
   if (context === undefined) {
     throw new Error("usePositions must be used within a PositionsProvider");
   }
+
   return context;
 }
