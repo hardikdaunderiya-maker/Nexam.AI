@@ -273,13 +273,22 @@ function FeedbackSection({ callId }: Props) {
                           {[1, 2, 3, 4, 5].map((star) => (
                             <div
                               key={`star-${star}`}
-                              className={`w-4 h-4 ${
+                              className={`text-lg cursor-pointer transform transition-all duration-300 hover:scale-125 hover:rotate-12 ${
                                 star <= topic.performance_rating
-                                  ? "text-yellow-400"
-                                  : "text-slate-300"
+                                  ? "text-yellow-400 animate-pulse"
+                                  : "text-slate-300 hover:text-yellow-200"
                               }`}
+                              style={{
+                                animationDelay: `${star * 150}ms`,
+                                filter: star <= topic.performance_rating 
+                                  ? 'drop-shadow(0 0 4px rgba(251, 191, 36, 0.6))' 
+                                  : 'none',
+                                textShadow: star <= topic.performance_rating 
+                                  ? '0 0 8px rgba(251, 191, 36, 0.4)' 
+                                  : 'none'
+                              }}
                             >
-                              ⭐
+                              {star <= topic.performance_rating ? "★" : "☆"}
                             </div>
                           ))}
                         </div>
