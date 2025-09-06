@@ -5,7 +5,14 @@ import { Analytics, CallData } from "@/types/response";
 import axios from "axios";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import ReactAudioPlayer from "react-audio-player";
-import { DownloadIcon, TrashIcon } from "lucide-react";
+import { 
+  DownloadIcon, 
+  TrashIcon, 
+  BarChart3, 
+  HelpCircle, 
+  FileText, 
+  Mic 
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { ResponseService } from "@/services/responses.service";
@@ -279,7 +286,10 @@ function CallInfo({
                   </div>
                 </div>
                 <div className="flex flex-col mt-3">
-                  <p className="font-semibold">Interview Recording</p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Mic className="w-5 h-5" />
+                    <p className="font-semibold">Interview Recording</p>
+                  </div>
                   <div className="flex flex-row gap-3 mt-2">
                     {call?.recording_url && (
                       <ReactAudioPlayer src={call?.recording_url} controls />
@@ -299,7 +309,10 @@ function CallInfo({
             {/* <div>{call.}</div> */}
           </div>
           <div className="bg-slate-200 rounded-2xl min-h-[120px] p-4 px-5 my-3">
-            <p className="font-semibold my-2">General Summary</p>
+            <div className="flex items-center gap-2 mb-4">
+              <BarChart3 className="w-5 h-5" />
+              <p className="font-semibold">General Summary</p>
+            </div>
 
             <div className="grid grid-cols-3 gap-4 my-2 mt-4 ">
               {analytics?.overallScore !== undefined && (
@@ -415,7 +428,10 @@ function CallInfo({
             analytics.questionSummaries &&
             analytics.questionSummaries.length > 0 && (
               <div className="bg-slate-200 rounded-2xl min-h-[120px] p-4 px-5 my-3">
-                <p className="font-semibold my-2 mb-4">Question Summary</p>
+                <div className="flex items-center gap-2 mb-4">
+                  <HelpCircle className="w-5 h-5" />
+                  <p className="font-semibold">Question Summary</p>
+                </div>
                 <ScrollArea className="rounded-md h-72 text-sm mt-3 py-3 leading-6 overflow-y-scroll whitespace-pre-line px-2">
                   {analytics?.questionSummaries.map((qs, index) => (
                     <QuestionAnswerCard
@@ -429,14 +445,17 @@ function CallInfo({
               </div>
             )}
           <div className="bg-slate-200 rounded-2xl min-h-[150px] max-h-[500px] p-4 px-5 mb-3">
-            <p className="font-semibold my-2 mb-4">Transcript</p>
-            <ScrollArea className="rounded-2xl text-sm h-96  overflow-y-auto whitespace-pre-line px-2">
+            <div className="flex items-center gap-2 mb-4">
+              <FileText className="w-5 h-5" />
+              <p className="font-semibold">Transcript</p>
+            </div>
+            <div className="rounded-2xl text-sm h-96 overflow-y-auto whitespace-pre-line px-2 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-200">
               <div
                 className="text-sm p-4 rounded-2xl leading-5 bg-slate-50"
                 // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{ __html: marked(transcript) }}
               />
-            </ScrollArea>
+            </div>
           </div>
           <FeedbackSection callId={call_id} />
           <RoadmapSection callId={call_id} />

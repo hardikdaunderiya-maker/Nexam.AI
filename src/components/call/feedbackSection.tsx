@@ -167,6 +167,12 @@ function FeedbackSection({ callId }: Props) {
   const topicFeedback = feedbackData.topic_wise_feedback || [];
   const overallAssessment = feedbackData.overall_assessment || {};
 
+  const getRatingBadgeStyle = (rating: number) => {
+    if (rating >= 4) return "bg-green-100 text-green-700 border border-green-200";
+    if (rating >= 3) return "bg-yellow-100 text-yellow-700 border border-yellow-200";
+    return "bg-red-100 text-red-700 border border-red-200";
+  };
+
   return (
     <div className="bg-slate-200 rounded-2xl min-h-[200px] p-4 px-5 mb-6">
       <div className="flex items-center gap-2 mb-4">
@@ -174,7 +180,7 @@ function FeedbackSection({ callId }: Props) {
         <p className="font-semibold">Resume Feedback</p>
       </div>
 
-      <ScrollArea className="rounded-2xl text-sm h-96 overflow-y-auto whitespace-pre-line px-2" style={{scrollbarWidth: 'thin'}}>
+      <div className="rounded-2xl text-sm h-96 overflow-y-auto whitespace-pre-line px-2 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-200">
         <div className="text-sm p-4 rounded-2xl leading-5 bg-slate-50">
 
         {/* Show message if no feedback data */}
@@ -251,64 +257,76 @@ function FeedbackSection({ callId }: Props) {
               <CardTitle>Topic-wise Performance Analysis</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {topicFeedback.map((topic, index) => (
-                <div key={index} className="border rounded-lg p-4 bg-slate-50">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-medium text-lg">{topic.topic}</h4>
-                    <div className="flex items-center gap-2">
-                      <span className={`text-lg font-bold ${getRatingColor(topic.performance_rating)}`}>
-                        {topic.performance_rating}/5
-                      </span>
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <div
-                            key={`star-${star}`}
-                            className={`w-4 h-4 ${
-                              star <= topic.performance_rating
-                                ? "text-yellow-400"
-                                : "text-gray-300"
-                            }`}
-                          >
-                            ⭐
-                          </div>
-                        ))}
+                <div key={index} className="border border-slate-200 rounded-xl p-5 bg-gradient-to-br from-white to-slate-50 hover:shadow-lg hover:border-blue-200 transition-all duration-300 group">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-lg text-slate-800 group-hover:text-blue-700 transition-colors mb-2">
+                        {topic.topic}
+                      </h4>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-sm font-bold px-3 py-1 rounded-full ${getRatingBadgeStyle(topic.performance_rating)}`}>
+                          {topic.performance_rating}/5
+                        </span>
+                        <div className="flex items-center gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <div
+                              key={`star-${star}`}
+                              className={`w-4 h-4 ${
+                                star <= topic.performance_rating
+                                  ? "text-yellow-400"
+                                  : "text-slate-300"
+                              }`}
+                            >
+                              ⭐
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    {/* Candidate Response Summary - Shortened */}
-                    <div>
-                      <p className="text-sm text-slate-600">
-                        {topic.candidate_response_summary && topic.candidate_response_summary.length > 100 
-                          ? topic.candidate_response_summary.substring(0, 100) + "..." 
+                  <div className="space-y-3">
+                    {/* Candidate Response Summary - Compact */}
+                    <div className="bg-slate-100 rounded-lg p-3">
+                      <h5 className="font-medium text-xs text-slate-700 mb-2">Response Summary</h5>
+                      <p className="text-xs text-slate-600 leading-relaxed">
+                        {topic.candidate_response_summary && topic.candidate_response_summary.length > 120 
+                          ? topic.candidate_response_summary.substring(0, 120) + "..." 
                           : topic.candidate_response_summary}
                       </p>
                     </div>
 
-                    {/* Resume Alignment - Compact Badge */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-medium">Resume Match:</span>
-                      <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        topic.resume_alignment === "Strongly Aligned" ? "bg-green-100 text-green-700" :
-                        topic.resume_alignment === "Partially Aligned" ? "bg-yellow-100 text-yellow-700" :
-                        "bg-red-100 text-red-700"
-                      }`}>
-                        {topic.resume_alignment}
+                    {/* Resume Alignment & Feedback in Grid */}
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-medium text-slate-700">Resume Match:</span>
+                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          topic.resume_alignment === "Strongly Aligned" ? "bg-green-100 text-green-700 border border-green-200" :
+                          topic.resume_alignment === "Partially Aligned" ? "bg-yellow-100 text-yellow-700 border border-yellow-200" :
+                          "bg-red-100 text-red-700 border border-red-200"
+                        }`}>
+                          {topic.resume_alignment}
+                        </div>
                       </div>
                     </div>
 
-                    {/* Key Areas to Improve - Limited to 3 items */}
+                    {/* Key Areas to Improve - Full Text */}
                     {topic.areas_for_improvement && topic.areas_for_improvement.length > 0 && (
                       <div>
-                        <h5 className="font-medium text-xs mb-1">Key Areas to Improve:</h5>
-                        <div className="flex flex-wrap gap-1">
+                        <h5 className="font-medium text-xs text-slate-700 mb-2">Areas to Improve</h5>
+                        <div className="space-y-1">
                           {topic.areas_for_improvement.slice(0, 3).map((area, aIndex) => (
-                            <span key={`improvement-${aIndex}`} className="text-xs bg-slate-200 px-2 py-1 rounded">
-                              • {area.length > 25 ? area.substring(0, 25) + "..." : area}
-                            </span>
+                            <div key={`improvement-${aIndex}`} className="text-xs bg-orange-50 text-orange-800 border border-orange-200 px-3 py-2 rounded-lg">
+                              • {area}
+                            </div>
                           ))}
+                          {topic.areas_for_improvement.length > 3 && (
+                            <div className="text-xs bg-slate-100 text-slate-600 px-3 py-2 rounded-lg text-center">
+                              +{topic.areas_for_improvement.length - 3} more areas to improve
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -386,7 +404,7 @@ function FeedbackSection({ callId }: Props) {
           </Card>
         )}
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 };

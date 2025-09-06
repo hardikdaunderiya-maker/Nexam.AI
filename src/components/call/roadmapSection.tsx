@@ -213,115 +213,125 @@ function RoadmapSection({ callId }: Props) {
         <p className="font-semibold">Personalized Learning Roadmap</p>
       </div>
 
-      <ScrollArea className="rounded-2xl text-sm h-96 overflow-y-auto whitespace-pre-line px-2" style={{scrollbarWidth: 'thin'}}>
+      <div className="rounded-2xl text-sm h-96 overflow-y-auto whitespace-pre-line px-2 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-200">
         <div className="text-sm p-4 rounded-2xl leading-5 bg-slate-50">
 
-          {/* Improvement Areas */}
+          {/* Improvement Areas - Concise Version */}
           <Card className="mb-4">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <BookOpen className="w-5 h-5" />
-                Areas for Improvement
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <BookOpen className="w-4 h-4" />
+                Key Areas to Improve
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {feedbackData.topic_wise_feedback?.filter(topic => topic.performance_rating <= 2).map((topic, index) => (
-                  <div key={index} className="border-l-4 border-orange-400 pl-4">
-                    <h4 className="font-medium text-orange-700">{topic.topic}</h4>
-                    <p className="text-sm text-slate-600 mb-2">
-                      Performance: {topic.performance_rating}/5 stars
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {/* Topic-wise improvements */}
+                {feedbackData.topic_wise_feedback?.filter(topic => topic.performance_rating <= 2).slice(0, 2).map((topic, index) => (
+                  <div key={index} className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium text-orange-800 text-sm">{topic.topic}</h4>
+                      <span className="text-xs bg-orange-200 text-orange-700 px-2 py-1 rounded">
+                        {topic.performance_rating}/5
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600">
+                      {topic.areas_for_improvement[0] || "Focus on fundamentals"}
                     </p>
-                    <ul className="text-sm text-slate-600 space-y-1">
-                      {topic.areas_for_improvement.slice(0, 2).map((area, aIndex) => (
-                        <li key={aIndex} className="flex items-center gap-2">
-                          <ArrowRight className="w-3 h-3" />
-                          {area}
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                 ))}
                 
-                {/* Overall weaknesses */}
+                {/* Overall weaknesses - compact */}
                 {feedbackData.overall_assessment?.weaknesses && feedbackData.overall_assessment.weaknesses.length > 0 && (
-                  <div className="border-l-4 border-red-400 pl-4">
-                    <h4 className="font-medium text-red-700">General Areas</h4>
-                    <ul className="text-sm text-slate-600 space-y-1">
-                      {feedbackData.overall_assessment.weaknesses.slice(0, 2).map((weakness, wIndex) => (
-                        <li key={wIndex} className="flex items-center gap-2">
-                          <ArrowRight className="w-3 h-3" />
-                          {weakness}
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <h4 className="font-medium text-red-800 text-sm mb-2">General Skills</h4>
+                    <p className="text-xs text-slate-600">
+                      {feedbackData.overall_assessment.weaknesses.slice(0, 2).join(", ")}
+                    </p>
                   </div>
                 )}
               </div>
             </CardContent>
           </Card>
 
-          {/* Recommended Courses */}
+          {/* Recommended Courses - Concise Version */}
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Star className="w-5 h-5" />
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Star className="w-4 h-4" />
                 Recommended UpGrad Courses
               </CardTitle>
-              <p className="text-sm text-slate-600">
-                Curated courses to strengthen your weak areas and boost your career
-              </p>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recommendedCourses.map((course, index) => (
-                  <div key={index} className="border rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-semibold text-lg text-blue-700">{course.title}</h4>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                        <span className="text-sm font-medium">{course.rating}</span>
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {recommendedCourses.slice(0, 2).map((course, index) => (
+                  <div key={index} className="border border-slate-200 rounded-xl p-4 bg-gradient-to-br from-white to-slate-50 hover:shadow-lg hover:border-orange-200 transition-all duration-300 group">
+                    <div className="flex items-start justify-between mb-3">
+                      <h4 className="font-semibold text-sm text-slate-800 leading-tight group-hover:text-orange-700 transition-colors">
+                        {course.title}
+                      </h4>
+                      <div className="flex items-center gap-1 ml-2 bg-yellow-50 px-2 py-1 rounded-full">
+                        <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                        <span className="text-xs font-medium text-yellow-700">{course.rating}</span>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-4 mb-3 text-sm text-slate-600">
-                      <span>📅 {course.duration}</span>
-                      <span>📊 {course.level}</span>
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="flex items-center gap-1 text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded-full">
+                        <span>⏱️</span>
+                        <span>{course.duration}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded-full">
+                        <span>📊</span>
+                        <span>{course.level}</span>
+                      </div>
                     </div>
                     
-                    <p className="text-sm text-slate-700 mb-3">{course.description}</p>
-                    
-                    <div className="mb-3">
-                      <h5 className="font-medium text-sm mb-2">Skills you'll learn:</h5>
-                      <div className="flex flex-wrap gap-2">
-                        {course.skills.map((skill, sIndex) => (
-                          <span key={sIndex} className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">
+                    <div className="mb-4">
+                      <div className="flex flex-wrap gap-1">
+                        {course.skills.slice(0, 3).map((skill, sIndex) => (
+                          <span key={sIndex} className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
                             {skill}
                           </span>
                         ))}
+                        {course.skills.length > 3 && (
+                          <span className="px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-medium">
+                            +{course.skills.length - 3}
+                          </span>
+                        )}
                       </div>
                     </div>
                     
-                    <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Enroll Now - Transform Your Career
+                    <Button 
+                      size="sm" 
+                      className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-xs font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 border-0 rounded-lg"
+                    >
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Enroll Now
                     </Button>
                   </div>
                 ))}
+                
+                {recommendedCourses.length > 2 && (
+                  <div className="text-center py-2">
+                    <p className="text-xs text-slate-500">
+                      +{recommendedCourses.length - 2} more courses available
+                    </p>
+                  </div>
+                )}
               </div>
               
               {recommendedCourses.length === 0 && (
-                <div className="text-center py-8 text-slate-600">
-                  <BookOpen className="w-12 h-12 mx-auto mb-4 text-slate-400" />
-                  <p>Great job! Your performance is strong across all areas.</p>
-                  <p className="text-sm">Keep up the excellent work!</p>
+                <div className="text-center py-6 text-slate-600">
+                  <BookOpen className="w-8 h-8 mx-auto mb-2 text-slate-400" />
+                  <p className="text-sm">Great performance across all areas!</p>
                 </div>
               )}
             </CardContent>
           </Card>
 
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }
