@@ -7,6 +7,7 @@ import compose from "@/lib/compose";
 import { InterviewerProvider } from "@/contexts/interviewers.context";
 import { InterviewProvider } from "@/contexts/interviews.context";
 import { ResponseProvider } from "@/contexts/responses.context";
+import { PositionsProvider } from "@/contexts/positions.context";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ClientProvider } from "@/contexts/clients.context";
 
@@ -17,6 +18,7 @@ const providers = ({ children }: ThemeProviderProps) => {
     InterviewProvider,
     InterviewerProvider,
     ResponseProvider,
+    PositionsProvider,
     ClientProvider,
   ]);
 
