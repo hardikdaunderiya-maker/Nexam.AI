@@ -265,10 +265,10 @@ function InterviewHome({ params, searchParams }: Props) {
           <div className="flex flex-row p-3 pt-4 justify-center gap-6 items-center sticky top-2 bg-white">
             <div className="font-bold text-md">{interview?.name}</div>
 
-            <div
+            {/* <div
               className="w-5 h-5 rounded-full border-2 border-white shadow"
               style={{ backgroundColor: iconColor }}
-            />
+            /> */}
 
             <div className="flex flex-row gap-3 my-auto">
               <UserIcon className="my-auto" size={16} />:{" "}
@@ -300,54 +300,8 @@ function InterviewHome({ params, searchParams }: Props) {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="bg-transparent shadow-none text-xs text-indigo-600 px-0 h-7 hover:scale-110 relative"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      seeInterviewPreviewPage();
-                    }}
-                  >
-                    <Eye />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent
-                  className="bg-zinc-300"
-                  side="bottom"
-                  sideOffset={4}
-                >
-                  <span className="text-black flex flex-row gap-4">
-                    Preview
-                  </span>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="bg-transparent shadow-none text-xs text-indigo-600 px-0 h-7 hover:scale-110 relative"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      setShowColorPicker(!showColorPicker);
-                    }}
-                  >
-                    <Palette size={19} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent
-                  className="bg-zinc-300"
-                  side="bottom"
-                  sideOffset={4}
-                >
-                  <span className="text-black flex flex-row gap-4">
-                    Theme Color
-                  </span>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            
+            
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
