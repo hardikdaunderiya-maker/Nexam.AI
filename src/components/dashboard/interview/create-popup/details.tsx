@@ -107,6 +107,7 @@ function DetailsPopup({
       time_duration: duration,
       description: generatedQuestionsResponse.description,
       is_anonymous: isAnonymous,
+      document_context: uploadedDocumentContext,
     };
     setInterviewData(updatedInterviewData);
   };
@@ -124,6 +125,7 @@ function DetailsPopup({
       time_duration: String(duration),
       description: "",
       is_anonymous: isAnonymous,
+      document_context: uploadedDocumentContext,
     };
     setInterviewData(updatedInterviewData);
   };

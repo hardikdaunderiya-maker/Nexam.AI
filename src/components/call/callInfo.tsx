@@ -16,6 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CircularProgress } from "@nextui-org/react";
 import QuestionAnswerCard from "@/components/dashboard/interview/questionAnswerCard";
 import { marked } from "marked";
+import FeedbackSection from "./feedbackSection";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -426,7 +427,7 @@ function CallInfo({
                 </ScrollArea>
               </div>
             )}
-          <div className="bg-slate-200 rounded-2xl min-h-[150px] max-h-[500px] p-4 px-5 mb-[150px]">
+          <div className="bg-slate-200 rounded-2xl min-h-[150px] max-h-[500px] p-4 px-5 mb-3">
             <p className="font-semibold my-2 mb-4">Transcript</p>
             <ScrollArea className="rounded-2xl text-sm h-96  overflow-y-auto whitespace-pre-line px-2">
               <div
@@ -436,6 +437,7 @@ function CallInfo({
               />
             </ScrollArea>
           </div>
+          <FeedbackSection callId={call_id} />
         </>
       )}
     </div>
