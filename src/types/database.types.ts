@@ -40,7 +40,7 @@ export type Database = {
         Row: {
           created_at: string;
           description: string | null;
-          document_context: string | null;
+          resume_file_path: string | null;
           id: string;
           insights: string[] | null;
           interviewer_id: number | null;
@@ -65,7 +65,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           description?: string | null;
-          document_context?: string | null;
+          resume_file_path?: string | null;
           id: string;
           insights?: string[] | null;
           interviewer_id?: number | null;
@@ -90,7 +90,7 @@ export type Database = {
         Update: {
           created_at?: string;
           description?: string | null;
-          document_context?: string | null;
+          resume_file_path?: string | null;
           id?: string;
           insights?: string[] | null;
           interviewer_id?: number | null;

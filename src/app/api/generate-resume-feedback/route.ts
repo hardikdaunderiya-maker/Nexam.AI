@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 import { ResponseService } from "@/services/responses.service";
 import { InterviewService } from "@/services/interviews.service";
+import { readFile } from "fs/promises";
+import { join } from "path";
+import { parsePdf } from "@/actions/parse-pdf";
+import { getResumeMappingFromFile } from "@/lib/resumeMapping";
 
 const SYSTEM_PROMPT = `You are an expert ATS (Applicant Tracking System) and HR analyst. Your task is to analyze a candidate's resume and their interview responses to provide comprehensive feedback.`;
 
@@ -92,7 +96,15 @@ export async function POST(req: Request) {
     const response = await ResponseService.getResponseByCallId(callId);
     const interview = await InterviewService.getInterviewById(response.interview_id);
 
-    if (!interview?.document_context) {
+    // Get resume file path from mapping
+    const resumeFilePath = await getResumeMappingFromFile(response.interview_id);
+    
+    // Add debugging
+    logger.info(`Looking for resume mapping for interview ID: ${response.interview_id}`);
+    logger.info(`Found resume file path: ${resumeFilePath}`);
+    
+    if (!resumeFilePath) {
+      logger.error(`No resume mapping found for interview ID: ${response.interview_id}`);
 
       return NextResponse.json(
         { error: "No resume found for this interview. Please upload a resume when creating the interview." },
@@ -105,6 +117,31 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "No transcript available for this call" },
         { status: 400 }
+      );
+    }
+
+    // Read resume file from local storage
+    const fullResumeFilePath = join(process.cwd(), 'public', resumeFilePath);
+    let resumeContent = "";
+    
+    try {
+      // Read the file and parse PDF content
+      const fileBuffer = await readFile(fullResumeFilePath);
+      const formData = new FormData();
+      const file = new File([fileBuffer], "resume.pdf", { type: "application/pdf" });
+      formData.append("file", file);
+      
+      const parseResult = await parsePdf(formData);
+      if (!parseResult.success) {
+        throw new Error("Failed to parse resume PDF");
+      }
+      resumeContent = parseResult.text || "";
+    } catch (error) {
+      logger.error("Error reading resume file:", error instanceof Error ? error.message : String(error));
+
+      return NextResponse.json(
+        { error: "Failed to read resume file" },
+        { status: 500 }
       );
     }
 
@@ -124,7 +161,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const prompt = getResumeFeedbackPrompt(interview.document_context, transcript, interviewQuestions);
+    const prompt = getResumeFeedbackPrompt(resumeContent, transcript, interviewQuestions);
 
     // Make Groq API call
     const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {

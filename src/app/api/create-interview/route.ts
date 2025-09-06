@@ -34,7 +34,10 @@ export async function POST(req: Request, res: Response) {
     logger.info("Interview created successfully");
 
     return NextResponse.json(
-      { response: "Interview created successfully" },
+      { 
+        response: "Interview created successfully",
+        interviewId: url_id 
+      },
       { status: 200 },
     );
   } catch (err) {

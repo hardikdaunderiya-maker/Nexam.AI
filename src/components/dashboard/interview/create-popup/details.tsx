@@ -55,6 +55,7 @@ function DetailsPopup({
   );
   const [duration, setDuration] = useState(interviewData.time_duration);
   const [uploadedDocumentContext, setUploadedDocumentContext] = useState("");
+  const [uploadedFilePath, setUploadedFilePath] = useState("");
 
   const slideLeft = (id: string, value: number) => {
     var slider = document.getElementById(`${id}`);
@@ -107,7 +108,7 @@ function DetailsPopup({
       time_duration: duration,
       description: generatedQuestionsResponse.description,
       is_anonymous: isAnonymous,
-      document_context: uploadedDocumentContext,
+      resume_file_path: uploadedFilePath, // Keep this for passing to next component
     };
     setInterviewData(updatedInterviewData);
   };
@@ -125,7 +126,7 @@ function DetailsPopup({
       time_duration: String(duration),
       description: "",
       is_anonymous: isAnonymous,
-      document_context: uploadedDocumentContext,
+      resume_file_path: uploadedFilePath, // Keep this for passing to next component
     };
     setInterviewData(updatedInterviewData);
   };
@@ -235,6 +236,7 @@ function DetailsPopup({
             fileName={fileName}
             setFileName={setFileName}
             setUploadedDocumentContext={setUploadedDocumentContext}
+            setUploadedFilePath={setUploadedFilePath}
           />
           <label className="flex-col mt-7 w-full">
             <div className="flex items-center cursor-pointer">

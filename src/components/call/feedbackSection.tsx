@@ -66,6 +66,11 @@ function FeedbackSection({ callId }: Props) {
         console.error("Error generating feedback:", error);
         const errorMessage = error.response?.data?.error || "Failed to generate feedback";
         setError(errorMessage);
+        
+        // Also log the full error for debugging
+        if (process.env.NODE_ENV === 'development') {
+          console.log("Full error details:", error);
+        }
       } finally {
         setLoading(false);
       }
@@ -157,6 +162,11 @@ function FeedbackSection({ callId }: Props) {
     return null;
   }
 
+  // Add safety checks for nested properties
+  const atsScore = feedbackData.ats_score || {};
+  const topicFeedback = feedbackData.topic_wise_feedback || [];
+  const overallAssessment = feedbackData.overall_assessment || {};
+
   return (
     <div className="bg-slate-200 rounded-2xl min-h-[200px] p-4 px-5 mb-[150px]">
       <div className="flex items-center gap-2 mb-4">
@@ -165,47 +175,64 @@ function FeedbackSection({ callId }: Props) {
       </div>
 
       <ScrollArea className="h-[600px] pr-4">
+
+        {/* Show message if no feedback data */}
+        {!atsScore.score && !topicFeedback.length && !overallAssessment.resume_interview_consistency && (
+          <Card className="mb-4">
+            <CardContent className="p-6 text-center">
+              <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+              <p className="text-slate-600 mb-2">Feedback data is being processed...</p>
+              <p className="text-sm text-slate-500">
+                The AI is analyzing the resume and interview. This may take a moment.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
         {/* ATS Score Section */}
-        <Card className="mb-4">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5" />
-              ATS Score Analysis
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4 mb-4">
-              <div className="text-3xl font-bold text-blue-600">
-                {feedbackData.ats_score.score}
-              </div>
-              <div className="text-sm text-slate-600">
-                / {feedbackData.ats_score.max_score}
-              </div>
+        {atsScore.score && (
+          <Card className="mb-4">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5" />
+                ATS Score Analysis
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="text-3xl font-bold text-blue-600">
+                  {atsScore.score || 0}
+                </div>
+                <div className="text-sm text-slate-600">
+                  / {atsScore.max_score || 100}
+                </div>
               <div className="flex-1 bg-gray-200 rounded-full h-2">
                 <div 
                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${(feedbackData.ats_score.score / feedbackData.ats_score.max_score) * 100}%` }}
+                  style={{ width: `${((atsScore.score || 0) / (atsScore.max_score || 100)) * 100}%` }}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              {Object.entries(feedbackData.ats_score.factors).map(([key, value]) => (
-                <div key={key} className="flex justify-between items-center">
-                  <span className="text-sm capitalize">
-                    {key.replace(/_/g, " ")}
-                  </span>
-                  <span className="font-medium">{value}</span>
-                </div>
-              ))}
-            </div>
+            {atsScore.factors && (
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                {Object.entries(atsScore.factors).map(([key, value]) => (
+                  <div key={key} className="flex justify-between items-center">
+                    <span className="text-sm capitalize">
+                      {key.replace(/_/g, " ")}
+                    </span>
+                    <span className="font-medium">{value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
 
-            {feedbackData.ats_score.improvement_suggestions.length > 0 && (
+            {atsScore.improvement_suggestions && atsScore.improvement_suggestions.length > 0 && (
               <div>
                 <h4 className="font-medium mb-2">Improvement Suggestions:</h4>
                 <ul className="list-disc list-inside space-y-1">
-                  {feedbackData.ats_score.improvement_suggestions.map((suggestion, index) => (
-                    <li key={index} className="text-sm text-slate-600">
+                  {atsScore.improvement_suggestions.map((suggestion, index) => (
+                    <li key={`suggestion-${index}`} className="text-sm text-slate-600">
                       {suggestion}
                     </li>
                   ))}
@@ -214,15 +241,17 @@ function FeedbackSection({ callId }: Props) {
             )}
           </CardContent>
         </Card>
+        )}
 
         {/* Topic-wise Feedback */}
-        <Card className="mb-4">
-          <CardHeader>
-            <CardTitle>Topic-wise Performance Analysis</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {feedbackData.topic_wise_feedback.map((topic, index) => (
+        {topicFeedback.length > 0 && (
+          <Card className="mb-4">
+            <CardHeader>
+              <CardTitle>Topic-wise Performance Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {topicFeedback.map((topic, index) => (
                 <div key={index} className="border rounded-lg p-4 bg-slate-50">
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="font-medium text-lg">{topic.topic}</h4>
@@ -284,68 +313,77 @@ function FeedbackSection({ callId }: Props) {
                     )}
                   </div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Overall Assessment */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Overall Assessment</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="font-medium">Resume-Interview Consistency:</span>
-                <div className="flex items-center gap-2">
-                  <div className="w-24 bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${feedbackData.overall_assessment.resume_interview_consistency}%` }}
-                    />
+        {overallAssessment.resume_interview_consistency && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Overall Assessment</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium">Resume-Interview Consistency:</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${overallAssessment.resume_interview_consistency || 0}%` }}
+                      />
+                    </div>
+                    <span className="text-sm font-medium">
+                      {overallAssessment.resume_interview_consistency || 0}%
+                    </span>
                   </div>
-                  <span className="text-sm font-medium">
-                    {feedbackData.overall_assessment.resume_interview_consistency}%
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="font-medium">Recommendation:</span>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getRecommendationColor(feedbackData.overall_assessment.recommendation)}`}>
-                  {feedbackData.overall_assessment.recommendation}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h5 className="font-medium mb-2 flex items-center gap-1">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                    Strengths
-                  </h5>
-                  <ul className="list-disc list-inside space-y-1">
-                    {feedbackData.overall_assessment.strengths.map((strength, index) => (
-                      <li key={`strength-${index}`} className="text-sm text-slate-600">{strength}</li>
-                    ))}
-                  </ul>
                 </div>
 
-                <div>
-                  <h5 className="font-medium mb-2 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4 text-red-600" />
-                    Areas to Improve
-                  </h5>
-                  <ul className="list-disc list-inside space-y-1">
-                    {feedbackData.overall_assessment.weaknesses.map((weakness, index) => (
-                      <li key={`weakness-${index}`} className="text-sm text-slate-600">{weakness}</li>
-                    ))}
-                  </ul>
+                {overallAssessment.recommendation && (
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">Recommendation:</span>
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getRecommendationColor(overallAssessment.recommendation)}`}>
+                      {overallAssessment.recommendation}
+                    </span>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {overallAssessment.strengths && overallAssessment.strengths.length > 0 && (
+                    <div>
+                      <h5 className="font-medium mb-2 flex items-center gap-1">
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        Strengths
+                      </h5>
+                      <ul className="list-disc list-inside space-y-1">
+                        {overallAssessment.strengths.map((strength, index) => (
+                          <li key={`strength-${index}`} className="text-sm text-slate-600">{strength}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {overallAssessment.weaknesses && overallAssessment.weaknesses.length > 0 && (
+                    <div>
+                      <h5 className="font-medium mb-2 flex items-center gap-1">
+                        <AlertCircle className="w-4 h-4 text-red-600" />
+                        Areas to Improve
+                      </h5>
+                      <ul className="list-disc list-inside space-y-1">
+                        {overallAssessment.weaknesses.map((weakness, index) => (
+                          <li key={`weakness-${index}`} className="text-sm text-slate-600">{weakness}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
       </ScrollArea>
     </div>
   );

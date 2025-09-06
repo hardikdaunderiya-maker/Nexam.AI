@@ -12,6 +12,7 @@ type Props = {
   fileName: string;
   setFileName: (fileName: string) => void;
   setUploadedDocumentContext: (context: string) => void;
+  setUploadedFilePath: (filePath: string) => void;
 };
 
 function FileUpload({
@@ -20,6 +21,7 @@ function FileUpload({
   fileName,
   setFileName,
   setUploadedDocumentContext,
+  setUploadedFilePath,
 }: Props) {
   const [uploading, setUploading] = useState(false);
 
@@ -44,12 +46,20 @@ function FileUpload({
         const formData = new FormData();
         formData.append("file", file);
 
-        const result = await parsePdf(formData);
+        // Use new upload API that saves file locally
+        const response = await fetch("/api/upload-resume", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
         if (!result.success) {
           throw new Error(result.error);
         }
-        const fullText = result.text || "";
-        setUploadedDocumentContext(fullText);
+
+        // Set both text content and file path
+        setUploadedDocumentContext(result.text || "");
+        setUploadedFilePath(result.filePath || "");
         setIsUploaded(true);
       } catch (error) {
         console.log(error);
