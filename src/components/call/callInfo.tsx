@@ -17,6 +17,7 @@ import { CircularProgress } from "@nextui-org/react";
 import QuestionAnswerCard from "@/components/dashboard/interview/questionAnswerCard";
 import { marked } from "marked";
 import FeedbackSection from "./feedbackSection";
+import RoadmapSection from "./roadmapSection";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -438,6 +439,7 @@ function CallInfo({
             </ScrollArea>
           </div>
           <FeedbackSection callId={call_id} />
+          <RoadmapSection callId={call_id} />
         </>
       )}
     </div>
