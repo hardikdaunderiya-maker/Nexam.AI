@@ -22,6 +22,7 @@ export async function POST(req: Request) {
     // Check API key
     if (!process.env.GROQ_API_KEY) {
       logger.error("GROQ_API_KEY is not configured");
+
       return NextResponse.json(
         { error: "Groq API key not configured" },
         { status: 500 }
@@ -56,6 +57,7 @@ export async function POST(req: Request) {
     if (!groqResponse.ok) {
       const errorText = await groqResponse.text();
       logger.error("Groq API error:", errorText);
+      
       return NextResponse.json(
         { error: "Failed to analyze communication" },
         { status: 500 }

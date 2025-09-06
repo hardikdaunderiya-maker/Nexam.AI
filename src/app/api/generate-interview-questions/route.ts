@@ -54,7 +54,7 @@ export async function POST(req: Request, res: Response) {
       { status: 200 },
     );
   } catch (error) {
-    logger.error("Error generating interview questions", error);
+    logger.error("Error generating interview questions", {error});
  
     return NextResponse.json(
       {
