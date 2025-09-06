@@ -58,6 +58,8 @@ function FileUpload({
         }
 
         // Set both text content and file path
+        console.log("📁 File upload result:", result);
+        console.log("📄 Setting file path:", result.filePath);
         setUploadedDocumentContext(result.text || "");
         setUploadedFilePath(result.filePath || "");
         setIsUploaded(true);

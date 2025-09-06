@@ -89,15 +89,22 @@ function QuestionsPopup({ interviewData, setProceed, setOpen }: Props) {
       });
 
       // Save resume mapping separately if file was uploaded
+      console.log("🔍 Resume file path:", resume_file_path);
+      console.log("🔍 Interview ID:", response.data.interviewId);
+      
       if (resume_file_path && response.data.interviewId) {
         try {
-          await axios.post("/api/save-resume-mapping", {
+          console.log("💾 Saving resume mapping...");
+          const mappingResponse = await axios.post("/api/save-resume-mapping", {
             interviewId: response.data.interviewId,
             filePath: resume_file_path,
           });
+          console.log("✅ Resume mapping saved:", mappingResponse.data);
         } catch (error) {
-          console.error("Error saving resume mapping:", error);
+          console.error("❌ Error saving resume mapping:", error);
         }
+      } else {
+        console.log("⚠️ No resume file path or interview ID found - mapping not saved");
       }
 
       setIsClicked(false);

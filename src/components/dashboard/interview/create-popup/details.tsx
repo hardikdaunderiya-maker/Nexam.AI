@@ -98,6 +98,8 @@ function DetailsPopup({
       }),
     );
 
+    console.log("🔄 Uploaded file path in details:", uploadedFilePath);
+    
     const updatedInterviewData = {
       ...interviewData,
       name: name.trim(),
@@ -110,11 +112,15 @@ function DetailsPopup({
       is_anonymous: isAnonymous,
       resume_file_path: uploadedFilePath, // Keep this for passing to next component
     };
+    
+    console.log("📋 Updated interview data:", updatedInterviewData);
     setInterviewData(updatedInterviewData);
   };
 
   const onManual = () => {
     setLoading(true);
+
+    console.log("🔄 Manual - Uploaded file path:", uploadedFilePath);
 
     const updatedInterviewData = {
       ...interviewData,
@@ -128,6 +134,8 @@ function DetailsPopup({
       is_anonymous: isAnonymous,
       resume_file_path: uploadedFilePath, // Keep this for passing to next component
     };
+    
+    console.log("📋 Manual - Updated interview data:", updatedInterviewData);
     setInterviewData(updatedInterviewData);
   };
 

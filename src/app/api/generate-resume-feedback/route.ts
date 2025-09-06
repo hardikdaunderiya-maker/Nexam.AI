@@ -6,6 +6,7 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 import { parsePdf } from "@/actions/parse-pdf";
 import { getResumeMappingFromFile } from "@/lib/resumeMapping";
+import { ResumeFeedbackCacheService } from "@/services/resumeFeedbackCache.service";
 
 const SYSTEM_PROMPT = `You are an expert ATS (Applicant Tracking System) and HR analyst. Your task is to analyze a candidate's resume and their interview responses to provide comprehensive feedback.`;
 
@@ -85,12 +86,26 @@ export async function POST(req: Request) {
     const { callId } = body;
 
     if (!callId) {
-
       return NextResponse.json(
         { error: "Call ID is required" },
         { status: 400 }
       );
     }
+
+    // 🚀 Check cache first
+    logger.info(`Checking cache for call ID: ${callId}`);
+    const cachedFeedback = await ResumeFeedbackCacheService.getCachedFeedback(callId);
+    
+    if (cachedFeedback) {
+      logger.info(`✅ Found cached feedback for call: ${callId}`);
+      return NextResponse.json({
+        feedback: cachedFeedback,
+        cached: true,
+        message: "Feedback retrieved from cache"
+      });
+    }
+
+    logger.info(`📡 No cache found, generating new feedback for call: ${callId}`);
 
     // Get call details and interview information
     const response = await ResponseService.getResponseByCallId(callId);
@@ -199,14 +214,34 @@ export async function POST(req: Request) {
     }
 
     const data = await groqResponse.json();
+    console.log(data, "rp data");
+
     const feedback = data.choices[0]?.message?.content;
 
     logger.info("Resume feedback generated successfully");
 
     const feedbackContent = feedback as string;
+    const parsedFeedback = JSON.parse(feedbackContent || "{}");
+    
+    // 💾 Cache the feedback for future requests
+    try {
+      await ResumeFeedbackCacheService.cacheFeedback(
+        callId,
+        response.interview_id,
+        parsedFeedback
+      );
+      logger.info(`💾 Feedback cached successfully for call: ${callId}`);
+    } catch (cacheError) {
+      logger.error("Failed to cache feedback:", cacheError as Error);
+      // Don't fail the request if caching fails
+    }
     
     return NextResponse.json(
-      { feedback: JSON.parse(feedbackContent || "{}") },
+      { 
+        feedback: parsedFeedback,
+        cached: false,
+        message: "Feedback generated and cached successfully"
+      },
       { status: 200 }
     );
   } catch (error) {
