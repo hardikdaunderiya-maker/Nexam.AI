@@ -15,6 +15,7 @@ export async function POST(req: Request, res: Response) {
   // Check if Groq API key is available
   if (!process.env.GROQ_API_KEY) {
     logger.error("Groq API key not found");
+
     return NextResponse.json(
       { error: "Groq API key not configured" },
       { status: 500 },
