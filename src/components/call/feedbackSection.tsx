@@ -168,13 +168,14 @@ function FeedbackSection({ callId }: Props) {
   const overallAssessment = feedbackData.overall_assessment || {};
 
   return (
-    <div className="bg-slate-200 rounded-2xl min-h-[200px] p-4 px-5 mb-[150px]">
+    <div className="bg-slate-200 rounded-2xl min-h-[200px] p-4 px-5 mb-6">
       <div className="flex items-center gap-2 mb-4">
         <FileText className="w-5 h-5" />
         <p className="font-semibold">Resume Feedback</p>
       </div>
 
-      <ScrollArea className="h-[600px] pr-4">
+      <ScrollArea className="rounded-2xl text-sm h-96 overflow-y-auto whitespace-pre-line px-2" style={{scrollbarWidth: 'thin'}}>
+        <div className="text-sm p-4 rounded-2xl leading-5 bg-slate-50">
 
         {/* Show message if no feedback data */}
         {!atsScore.score && !topicFeedback.length && !overallAssessment.resume_interview_consistency && (
@@ -276,39 +277,39 @@ function FeedbackSection({ callId }: Props) {
                     </div>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2">
+                    {/* Candidate Response Summary - Shortened */}
                     <div>
-                      <h5 className="font-medium text-sm mb-1">Questions Asked:</h5>
-                      <ul className="list-disc list-inside text-sm text-slate-600">
-                        {topic.questions_asked.map((question, qIndex) => (
-                          <li key={`question-${qIndex}`}>{question}</li>
-                        ))}
-                      </ul>
+                      <p className="text-sm text-slate-600">
+                        {topic.candidate_response_summary && topic.candidate_response_summary.length > 100 
+                          ? topic.candidate_response_summary.substring(0, 100) + "..." 
+                          : topic.candidate_response_summary}
+                      </p>
                     </div>
 
-                    <div>
-                      <h5 className="font-medium text-sm mb-1">Response Summary:</h5>
-                      <p className="text-sm text-slate-600">{topic.candidate_response_summary}</p>
+                    {/* Resume Alignment - Compact Badge */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium">Resume Match:</span>
+                      <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        topic.resume_alignment === "Strongly Aligned" ? "bg-green-100 text-green-700" :
+                        topic.resume_alignment === "Partially Aligned" ? "bg-yellow-100 text-yellow-700" :
+                        "bg-red-100 text-red-700"
+                      }`}>
+                        {topic.resume_alignment}
+                      </div>
                     </div>
 
-                    <div>
-                      <h5 className="font-medium text-sm mb-1">Resume Alignment:</h5>
-                      <p className="text-sm text-slate-600">{topic.resume_alignment}</p>
-                    </div>
-
-                    <div>
-                      <h5 className="font-medium text-sm mb-1">Feedback:</h5>
-                      <p className="text-sm text-slate-600">{topic.feedback}</p>
-                    </div>
-
-                    {topic.areas_for_improvement.length > 0 && (
+                    {/* Key Areas to Improve - Limited to 3 items */}
+                    {topic.areas_for_improvement && topic.areas_for_improvement.length > 0 && (
                       <div>
-                        <h5 className="font-medium text-sm mb-1">Areas for Improvement:</h5>
-                        <ul className="list-disc list-inside text-sm text-slate-600">
-                          {topic.areas_for_improvement.map((area, aIndex) => (
-                            <li key={`improvement-${aIndex}`}>{area}</li>
+                        <h5 className="font-medium text-xs mb-1">Key Areas to Improve:</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {topic.areas_for_improvement.slice(0, 3).map((area, aIndex) => (
+                            <span key={`improvement-${aIndex}`} className="text-xs bg-slate-200 px-2 py-1 rounded">
+                              • {area.length > 25 ? area.substring(0, 25) + "..." : area}
+                            </span>
                           ))}
-                        </ul>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -384,6 +385,7 @@ function FeedbackSection({ callId }: Props) {
             </CardContent>
           </Card>
         )}
+        </div>
       </ScrollArea>
     </div>
   );
