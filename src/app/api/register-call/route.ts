@@ -14,6 +14,7 @@ export async function POST(req: Request, res: Response) {
     // Check API key
     if (!process.env.RETELL_API_KEY) {
       logger.error("RETELL_API_KEY is not configured");
+      
       return NextResponse.json(
         { error: "Retell API key not configured" },
         { status: 500 }
@@ -30,6 +31,7 @@ export async function POST(req: Request, res: Response) {
     // Validate input
     if (!interviewerId) {
       logger.error("Missing interviewer_id in request body");
+      
       return NextResponse.json(
         { error: "Missing interviewer_id" },
         { status: 400 }
@@ -44,6 +46,7 @@ export async function POST(req: Request, res: Response) {
 
     if (!interviewer) {
       logger.error(`Interviewer not found for ID: ${interviewerId}`);
+      
       return NextResponse.json(
         { error: "Interviewer not found" },
         { status: 404 }
@@ -52,6 +55,7 @@ export async function POST(req: Request, res: Response) {
 
     if (!interviewer.agent_id) {
       logger.error(`Interviewer missing agent_id: ${interviewerId}`, interviewer);
+      
       return NextResponse.json(
         { error: "Interviewer missing agent_id" },
         { status: 400 }
@@ -67,6 +71,7 @@ export async function POST(req: Request, res: Response) {
     });
 
     logger.info("Call registered successfully");
+    
     return NextResponse.json(
       { registerCallResponse },
       { status: 200 }
