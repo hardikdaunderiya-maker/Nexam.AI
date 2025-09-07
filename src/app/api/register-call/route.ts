@@ -78,6 +78,7 @@ export async function POST(req: Request, res: Response) {
     );
   } catch (error) {
     logger.error("Error in register-call:", error);
+    
     return NextResponse.json(
       { 
         error: "Internal server error", 
