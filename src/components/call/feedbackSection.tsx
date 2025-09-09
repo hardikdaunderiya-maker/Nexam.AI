@@ -244,7 +244,7 @@ function FeedbackSection({ callId }: Props) {
                 <h4 className="font-medium mb-2">Improvement Suggestions:</h4>
                 <ul className="list-disc list-inside space-y-1">
                   {atsScore.improvement_suggestions.map((suggestion, index) => (
-                    <li key={`suggestion-${index}`} className="text-sm text-slate-600">
+                    <li key={`suggestion-${suggestion.slice(0, 20)}-${index}`} className="text-sm text-slate-600">
                       {suggestion}
                     </li>
                   ))}
@@ -264,7 +264,7 @@ function FeedbackSection({ callId }: Props) {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {topicFeedback.map((topic, index) => (
-                <div key={index} className="border border-slate-200 rounded-xl p-5 bg-gradient-to-br from-white to-slate-50 hover:shadow-lg hover:border-blue-200 transition-all duration-300 group">
+                <div key={`topic-${topic.topic}-${index}`} className="border border-slate-200 rounded-xl p-5 bg-gradient-to-br from-white to-slate-50 hover:shadow-lg hover:border-blue-200 transition-all duration-300 group">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <h4 className="font-semibold text-lg text-slate-800 group-hover:text-blue-700 transition-colors mb-2">
@@ -332,7 +332,7 @@ function FeedbackSection({ callId }: Props) {
                         <h5 className="font-medium text-xs text-slate-700 mb-2">Areas to Improve</h5>
                         <div className="space-y-1">
                           {topic.areas_for_improvement.slice(0, 3).map((area, aIndex) => (
-                            <div key={`improvement-${aIndex}`} className="text-xs bg-orange-50 text-orange-800 border border-orange-200 px-3 py-2 rounded-lg">
+                            <div key={`improvement-${topic.topic}-${area.slice(0, 15)}-${aIndex}`} className="text-xs bg-orange-50 text-orange-800 border border-orange-200 px-3 py-2 rounded-lg">
                               • {area}
                             </div>
                           ))}
@@ -393,7 +393,7 @@ function FeedbackSection({ callId }: Props) {
                       </h5>
                       <ul className="list-disc list-inside space-y-1">
                         {overallAssessment.strengths.map((strength, index) => (
-                          <li key={`strength-${index}`} className="text-sm text-slate-600">{strength}</li>
+                          <li key={`strength-${strength.slice(0, 20)}-${index}`} className="text-sm text-slate-600">{strength}</li>
                         ))}
                       </ul>
                     </div>
@@ -407,7 +407,7 @@ function FeedbackSection({ callId }: Props) {
                       </h5>
                       <ul className="list-disc list-inside space-y-1">
                         {overallAssessment.weaknesses.map((weakness, index) => (
-                          <li key={`weakness-${index}`} className="text-sm text-slate-600">{weakness}</li>
+                          <li key={`weakness-${weakness.slice(0, 20)}-${index}`} className="text-sm text-slate-600">{weakness}</li>
                         ))}
                       </ul>
                     </div>

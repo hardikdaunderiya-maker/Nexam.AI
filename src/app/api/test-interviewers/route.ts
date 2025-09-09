@@ -13,6 +13,7 @@ export async function GET() {
     });
   } catch (error) {
     console.error("❌ Error fetching interviewers:", error);
+    
     return NextResponse.json(
       { error: "Failed to fetch interviewers", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }

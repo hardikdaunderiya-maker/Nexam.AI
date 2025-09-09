@@ -228,7 +228,7 @@ function RoadmapSection({ callId }: Props) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {/* Topic-wise improvements */}
                 {feedbackData.topic_wise_feedback?.filter(topic => topic.performance_rating <= 2).slice(0, 2).map((topic, index) => (
-                  <div key={index} className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                  <div key={`priority-topic-${topic.topic}-${index}`} className="bg-orange-50 border border-orange-200 rounded-lg p-3">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium text-orange-800 text-sm">{topic.topic}</h4>
                       <span className="text-xs bg-orange-200 text-orange-700 px-2 py-1 rounded">
@@ -265,7 +265,7 @@ function RoadmapSection({ callId }: Props) {
             <CardContent className="pt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {recommendedCourses.slice(0, 2).map((course, index) => (
-                  <div key={index} className="border border-slate-200 rounded-xl p-4 bg-gradient-to-br from-white to-slate-50 hover:shadow-lg hover:border-orange-200 transition-all duration-300 group">
+                  <div key={`course-${course.title.replace(/\s+/g, '-')}-${index}`} className="border border-slate-200 rounded-xl p-4 bg-gradient-to-br from-white to-slate-50 hover:shadow-lg hover:border-orange-200 transition-all duration-300 group">
                     <div className="flex items-start justify-between mb-3">
                       <h4 className="font-semibold text-sm text-slate-800 leading-tight group-hover:text-orange-700 transition-colors">
                         {course.title}
@@ -290,7 +290,7 @@ function RoadmapSection({ callId }: Props) {
                     <div className="mb-4">
                       <div className="flex flex-wrap gap-1">
                         {course.skills.slice(0, 3).map((skill, sIndex) => (
-                          <span key={sIndex} className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                          <span key={`skill-${skill.replace(/\s+/g, '-')}-${sIndex}`} className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
                             {skill}
                           </span>
                         ))}
