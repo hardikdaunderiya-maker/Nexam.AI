@@ -40,6 +40,7 @@ export type Database = {
         Row: {
           created_at: string;
           description: string | null;
+          resume_file_path: string | null;
           id: string;
           insights: string[] | null;
           interviewer_id: number | null;
@@ -64,6 +65,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           description?: string | null;
+          resume_file_path?: string | null;
           id: string;
           insights?: string[] | null;
           interviewer_id?: number | null;
@@ -88,6 +90,7 @@ export type Database = {
         Update: {
           created_at?: string;
           description?: string | null;
+          resume_file_path?: string | null;
           id?: string;
           insights?: string[] | null;
           interviewer_id?: number | null;
@@ -240,6 +243,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "response_interview_id_fkey";
+            columns: ["interview_id"];
+            isOneToOne: false;
+            referencedRelation: "interview";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      resume_feedback_cache: {
+        Row: {
+          id: string;
+          interview_id: string;
+          call_id: string;
+          feedback_data: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          interview_id: string;
+          call_id: string;
+          feedback_data: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          interview_id?: string;
+          call_id?: string;
+          feedback_data?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "resume_feedback_cache_interview_id_fkey";
             columns: ["interview_id"];
             isOneToOne: false;
             referencedRelation: "interview";

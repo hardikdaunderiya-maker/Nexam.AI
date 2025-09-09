@@ -21,6 +21,7 @@ export interface InterviewBase {
   questions: Question[];
   description: string;
   response_count: bigint;
+  resume_file_path?: string;
 }
 
 export interface InterviewDetails {

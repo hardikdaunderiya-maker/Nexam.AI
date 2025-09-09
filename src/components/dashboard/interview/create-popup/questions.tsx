@@ -80,10 +80,33 @@ function QuestionsPopup({ interviewData, setProceed, setOpen }: Props) {
         logo_url: organization?.imageUrl || "",
       };
 
+      // Remove resume_file_path from data sent to database
+      const { resume_file_path, ...dbInterviewData } = sanitizedInterviewData;
+      
       const response = await axios.post("/api/create-interview", {
         organizationName: organization?.name,
-        interviewData: sanitizedInterviewData,
+        interviewData: dbInterviewData,
       });
+
+      // Save resume mapping separately if file was uploaded
+      console.log("🔍 Resume file path:", resume_file_path);
+      console.log("🔍 Interview ID:", response.data.interviewId);
+      
+      if (resume_file_path && response.data.interviewId) {
+        try {
+          console.log("💾 Saving resume mapping...");
+          const mappingResponse = await axios.post("/api/save-resume-mapping", {
+            interviewId: response.data.interviewId,
+            filePath: resume_file_path,
+          });
+          console.log("✅ Resume mapping saved:", mappingResponse.data);
+        } catch (error) {
+          console.error("❌ Error saving resume mapping:", error);
+        }
+      } else {
+        console.log("⚠️ No resume file path or interview ID found - mapping not saved");
+      }
+
       setIsClicked(false);
       fetchInterviews();
       setOpen(false);

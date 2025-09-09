@@ -36,6 +36,7 @@ const useTabSwitchPrevention = () => {
 };
 
 function TabSwitchWarning() {
+  
   const { isDialogOpen, handleUnderstand } = useTabSwitchPrevention();
 
   return (
