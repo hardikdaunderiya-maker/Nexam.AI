@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
-import { join } from "path";
 import { parsePdf } from "@/actions/parse-pdf";
 
 export async function POST(req: Request) {
@@ -29,17 +27,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Generate unique filename
-    const timestamp = Date.now();
-    const filename = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-    const uploadDir = join(process.cwd(), 'public', 'uploads', 'resumes');
-    const filePath = join(uploadDir, filename);
-
-    // Convert file to buffer and save
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    await writeFile(filePath, buffer);
-
     // Parse PDF to get text content
     const parseResult = await parsePdf(formData);
     if (!parseResult.success) {
@@ -49,12 +36,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // Return both file path and parsed text
-    const relativePath = `/uploads/resumes/${filename}`;
-    
+    // Return only the parsed text (no file storage)
     return NextResponse.json({
       success: true,
-      filePath: relativePath,
+      filePath: null, // No file storage
       fileName: file.name,
       text: parseResult.text,
     });
