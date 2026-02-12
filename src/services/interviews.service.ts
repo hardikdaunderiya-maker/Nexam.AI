@@ -79,7 +79,8 @@ const getAllRespondents = async (interviewId: string) => {
 const createInterview = async (payload: any) => {
   const { error, data } = await supabase
     .from("interview")
-    .insert({ ...payload });
+    .insert({ ...payload })
+    .select();
   if (error) {
     console.log(error);
 
