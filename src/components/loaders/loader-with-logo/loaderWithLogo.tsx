@@ -5,7 +5,7 @@ function LoaderWithLogo() {
   return (
     <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
       <Image
-        src="/Loading-Time.png"
+        src="/loading-time.png"
         alt="logo"
         width={200}
         height={200}
